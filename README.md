@@ -7,7 +7,7 @@ Este repositório tem como objetivo centralizar todos os exercícios de laborat�
 ## 🗂️ Estrutura
 
 - Prática 1
-    - Trabalhamos com a criação de classes e objetos básicos, construção de construtores, getters e setters.
+    - Conceitos de Orientação a Objetos: criação de classes, instanciação de objetos, construtores, métodos *getters* e setters*.
 
 ...
 
