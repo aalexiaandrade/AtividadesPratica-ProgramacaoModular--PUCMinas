@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-        Pessoa p[] = new Pessoa[2];
+        Pessoa p[] = new Pessoa[10];
 
         int escolha = 0;
 
