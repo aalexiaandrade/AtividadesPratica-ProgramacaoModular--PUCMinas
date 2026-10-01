@@ -1,81 +1,90 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package mecanica;
-
 import java.util.ArrayList;
-/**
- *
- * @author 1538464
- */
+import java.util.List;
+
 public class Box {
-    
-    ArrayList<OrdemServico> ordens;
-
-    private int num;
-    private String tipo_servico;
-    private int capacidade_maxima;
+    private int numero;
+    private String tipoServicoPermitido;
+    private int capacidadeMaximaVeiculos;
     private String localizacao;
-    private Mecanico mecanico;
-    
-    public Box(int num, String tipo_servico, int capacidade_maxima, String localizacao) {
-        this.num = num;
-        this.tipo_servico = tipo_servico;
-        this.capacidade_maxima = capacidade_maxima;
+    private Mecanico mecanicoResponsavel;
+    private List<OrdemServico> ordensAtivas;
+    private int totalOrdensFinalizadas;
+
+    public Box(int numero, String tipoServicoPermitido, int capacidadeMaximaVeiculos, String localizacao) {
+        this.numero = numero;
+        this.tipoServicoPermitido = tipoServicoPermitido;
+        this.capacidadeMaximaVeiculos = capacidadeMaximaVeiculos;
         this.localizacao = localizacao;
+        this.mecanicoResponsavel = null;
+        this.ordensAtivas = new ArrayList<>();
+        this.totalOrdensFinalizadas = 0;
     }
 
-    public Box(){}
-    
-    
-    public ArrayList<OrdemServico> getOrdem() {
-        return ordens;
+    public int getNumero() {
+        return numero;
     }
 
-    public void setOrdem(ArrayList<OrdemServico> ordem) {
-        this.ordens = ordem;
+    public String getTipoServicoPermitido() {
+        return tipoServicoPermitido;
     }
 
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
-    }
-
-    public String getTipo_servico() {
-        return tipo_servico;
-    }
-
-    public void setTipo_servico(String tipo_servico) {
-        this.tipo_servico = tipo_servico;
+    public int getCapacidadeMaximaVeiculos() {
+        return capacidadeMaximaVeiculos;
     }
 
     public String getLocalizacao() {
         return localizacao;
     }
 
-    public void setLocalizacao(String localizacao) {
-        this.localizacao = localizacao;
+    public Mecanico getMecanicoResponsavel() {
+        return mecanicoResponsavel;
     }
 
-    public void adicionarOrdem(OrdemServico ordem){
-        ordens.add(ordem);
+    public void setMecanicoResponsavel(Mecanico mecanicoResponsavel) {
+        this.mecanicoResponsavel = mecanicoResponsavel;
     }
 
-    public void adicionarBox(){
-
+    public List<OrdemServico> getOrdensAtivas() {
+        return ordensAtivas;
     }
 
-    public void visualizarOrdem(int num_box){
-        System.out.println("---------------- ORDENS ----------------");
-        int quant = 0;
-        for (int i = 0; i < ordens.size(); i++){
-            System.out.println("Codigo: "+ ordens.get(i).getCodigo() + " | Data Inicio: "+ ordens.get(i).getData() + " | Cliente: " + ordens.get(i).getNome_cliente());
-            quant++;
+    public int getTotalOrdensFinalizadas() {
+        return totalOrdensFinalizadas;
+    }
+
+    public boolean adicionarOrdem(OrdemServico ordem) {
+        if (ordensAtivas.size() >= capacidadeMaximaVeiculos) {
+            System.out.println("Erro: Capacidade máxima do Box " + numero + " atingida.");
+            return false;
         }
-        System.out.println("------------ Total ordens: " + quant);
+
+        if (ordem.getServico() != null && !ordem.getServico().getCategoria().equalsIgnoreCase(tipoServicoPermitido)) {
+            System.out.println("Erro: O tipo de serviço da OS (" + ordem.getServico().getCategoria() + 
+                               ") é incompatível com o tipo permitido no Box (" + tipoServicoPermitido + ").");
+            return false;
+        }
+
+        ordensAtivas.add(ordem);
+        ordem.setStatus("em execução");
+        ordem.setBoxAlocado(this);
+        return true;
+    }
+
+    public boolean finalizarOrdem(int codigoOS) {
+        OrdemServico ordemEncontrada = null;
+        for (OrdemServico os : ordensAtivas) {
+            if (os.getCodigo() == codigoOS) {
+                ordemEncontrada = os;
+                break;
+            }
+        }
+
+        if (ordemEncontrada != null) {
+            ordemEncontrada.setStatus("finalizada");
+            ordensAtivas.remove(ordemEncontrada);
+            totalOrdensFinalizadas++;
+            return true;
+        }
+        return false;
     }
 }

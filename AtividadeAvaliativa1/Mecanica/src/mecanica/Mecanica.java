@@ -1,15 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
-package mecanica;
-
 import java.util.ArrayList;
 import java.util.Scanner;
-/**
- *
- * @author 1538464
- */
+
 public class Mecanica {
 
     /**
@@ -24,10 +15,11 @@ public class Mecanica {
         ArrayList<Mecanico> mecanicos = new ArrayList<>();
         ArrayList<Box> boxes = new ArrayList<>();
         ArrayList<Servico> servicos = new ArrayList<>();
+        ArrayList<OrdemServico> ordens = new ArrayList<>(); 
         
-        Mecanico meca1 = new Mecanico("Joel", 1578965423, "LAVA-JATO", 318954782);
-        Mecanico meca2 = new Mecanico("Fabricio", 1578965423, "TROCADOR DE OLEO", 318954782);
-        Mecanico meca3 = new Mecanico("Antonio", 1578965423, "REPARADOR", 318954782);
+        Mecanico meca1 = new Mecanico("Joel", "1578965423", "LAVA-JATO", "318954782");
+        Mecanico meca2 = new Mecanico("Fabricio", "1578965423", "TROCADOR DE OLEO", "318954782");
+        Mecanico meca3 = new Mecanico("Antonio", "1578965423", "REPARADOR", "318954782");
         
         mecanicos.add(meca1);
         mecanicos.add(meca2);
@@ -49,8 +41,6 @@ public class Mecanica {
         servicos.add(serv2);
         servicos.add(serv3);
 
-        OrdemServico novaOrdem = new OrdemServico();
-        Box box = new Box();
         
         int codigo = 0;
         int escolha = 0;
@@ -69,33 +59,53 @@ public class Mecanica {
             escolha = scanner.nextInt();
 
             if(escolha == 1){
-                System.out.println("--------------- ORDEM DE SERVIÇO ---------------");
+                if (escolha == 1) {
+                System.out.println("\n--------------- ORDEM DE SERVIÇO ---------------");
 
-                codigo++;
-
-                for (int i = 0; i < servicos.size(); i++ ){
-                    System.out.println("| " + servicos.get(i).getNome() + " | " + servicos.get(i).getTempo_estimado() + " | " + servicos.get(i).getValor());
+                System.out.println("Serviços disponíveis:");
+                for (int i = 0; i < servicos.size(); i++) {
+                    System.out.println("- " + servicos.get(i).getNome() + " | Tempo: " + servicos.get(i).getTempoEstimadoMinutos() + " min | R$ " + servicos.get(i).getValor());
                 }
 
-                System.out.println("Digite seu nome: ");
-                String nome = scanner.next();
-                System.out.println("Digite o modelo do seu carro: ");
-                String modelo = scanner.next();
-                System.out.println("Digite a placa do seu carro: ");
-                String placa = scanner.next();
-                System.out.println("Digite a data: ");
-                int data = scanner.nextInt();
-                System.out.println("Digite nome do servico a ser prestado: ");
-                String serv = scanner.next();
+                System.out.print("Digite o nome do cliente: ");
+                String nome = scanner.nextLine();
+                
+                System.out.print("Digite o modelo do carro: ");
+                String modelo = scanner.nextLine();
+                
+                System.out.print("Digite a placa do carro: ");
+                String placa = scanner.nextLine();
+                
+                System.out.print("Digite a data (ex: 20/03/2026): ");
+                String data = scanner.nextLine();
+                
+                System.out.print("Digite o nome exato do serviço desejado: ");
+                String serv = scanner.nextLine();
 
-                Servico nome_servico;
-                for (Servico servico : servicos){
-                    if (serv == servico.getNome()){
-                        nome_servico = serv;
-                        novaOrdem = new OrdemServico(codigo, nome, modelo, placa, data, nome_servico, "ABERTA");
-                        box.adicionarOrdem(novaOrdem);
+                Servico servicoEncontrado = null;
+                for (Servico s : servicos) {
+                    if (serv.equalsIgnoreCase(s.getNome())) {
+                        servicoEncontrado = s;
                         break;
                     }
+                }
+
+                if (servicoEncontrado != null) {
+                    codigo++;
+                    OrdemServico novaOrdem = new OrdemServico(codigo, nome, modelo, placa, data, servicoEncontrado);
+                    ordens.add(novaOrdem);
+                    System.out.println("Ordem de Serviço #" + codigo + " cadastrada com sucesso! (Status: ABERTA)");
+                } else {
+                    System.out.println("Erro: Serviço não encontrado no catálogo.");
+                }
+
+                if (servicoEncontrado != null) {
+                    codigo++;
+                    OrdemServico novaOrdem = new OrdemServico(codigo, nome, modelo, placa, data, servicoEncontrado);
+                    ordens.add(novaOrdem);
+                    System.out.println("Ordem de Serviço #" + codigo + " cadastrada com sucesso! (Status: ABERTA)");
+                } else {
+                    System.out.println("Erro: Serviço não encontrado no catálogo.");
                 }
 
             }
@@ -112,5 +122,4 @@ public class Mecanica {
             }
         }
     }
-    
-}
+}}
